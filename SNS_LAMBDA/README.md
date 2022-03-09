@@ -24,15 +24,15 @@ O AWS EC2 são os servidores virtuais da Amazon.
 
 ## IDÉIA DO PROJETO
 ```
- _____________                    ___________                        ____________                         _____________
-|             |                  |           |                      |            |                       |             |
-|             |  publish message |           | activate the trigger |            | starting/stopping EC2 |             |
-| EC2 JENKINS | ---------------> |  AWS SNS  | -------------------> | AWS LAMBDA | --------------------> |  EC2 TESTE  |
-|             |                  |           |                      |            |                       |             |  
-|_____________|                  |___________|                      |____________|                       |_____________|
+ _____________                       ___________                        ____________                          _____________
+|             |                     |           |                      |            |                        |             |
+|             |   publish message   |           | activate the trigger |            | starting/stopping EC2  |             |
+| EC2 JENKINS | ------------------> |  AWS SNS  | -------------------> | AWS LAMBDA | ---------------------> |  EC2 TESTE  |
+|             |                     |           |                      |            |                        |             |  
+|_____________|                     |___________|                      |____________|                        |_____________|
 ```
 
-
+A idéa do projeto é fazer com que a mEC2 JENKINS consiga publicar uma mensagem em um tópico SNS, que por sua vez será um gatilho para uma função LAMBDA que será responsável por rodar uma aplicação Python que irá ligar e desligar a EC2 TESTE
 
 
 
