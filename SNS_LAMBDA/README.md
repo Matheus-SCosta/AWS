@@ -35,7 +35,8 @@ Para criar uma função LAMBDA basta seguir a documentação https://docs.aws.am
 #### CRIAÇÃO POLICIES E ROLE IAM PARA A FUNÇÃO LAMBDA:
 Com a função lambda já criada precisamos criar uma role IAM para que o LAMBDA consiga ter permissão para dá comandos em recursos AWS. No nosso caso é necessário por exemplo permissão para ligar e desligar EC2, dentre outras. Geralmente ao criamos uma função LAMBDA vocẽ pode criar uma role com funções básicas para o lambda, caso essa role já exista seria necessário apenas criar uma policie e attachar na role já criada para a função LAMBDA. Então dessa forma vamos criar uma policie com permissão para ligar e desligar EC2 e para criar basta ir no console do IAM => POLICIES => CREATE POLICIES e colocar o json abaixo e criar a policie.   
 
-```{
+```
+{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -61,3 +62,7 @@ Com a função lambda já criada precisamos criar uma role IAM para que o LAMBDA
 
 Ao concluir a criação da policie attach a role usada pela função LAMBDA.
 
+
+#### CRIAÇÃO POLICIES E ROLE IAM PARA A EC2 DO JENKINS 
+
+É necessário também a criação de uma role IAM para a máquina do Jenkins conseguir dá comandos da EC2 de testes. Para isso também pode-se usar um usuário de serviço que tenha **access_key_id** e **secret_access_key**, mas optei por criar uma role. Para a criação da Role, você pode criar uma role com alguma policie para ter acesso full a EC2. Para criar uma role vá no console do IAM => ROLES => CREATE ROLE. Após a criação da ROLE foi necessário attacha-la na máquina do Jenkins.
