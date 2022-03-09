@@ -32,7 +32,7 @@ O AWS EC2 são os servidores virtuais da Amazon.
 |_____________|                     |___________|                      |____________|                        |_____________|
 ```
 
-A idéa do projeto é fazer com que a mEC2 JENKINS consiga publicar uma mensagem em um tópico SNS, que por sua vez será um gatilho para uma função LAMBDA que será responsável por rodar uma aplicação Python que irá ligar e desligar a EC2 TESTE
+A idéa do projeto é fazer com que a EC2 JENKINS consiga publicar uma mensagem em um tópico SNS, que por sua vez será um gatilho para uma função LAMBDA que será responsável por rodar uma aplicação Python que irá ligar e desligar a EC2 TESTE
 
 
 
