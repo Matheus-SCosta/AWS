@@ -78,6 +78,36 @@ Com a função lambda já criada precisamos criar uma role IAM para que o LAMBDA
 Ao concluir a criação da policie attach a role usada pela função LAMBDA.
 
 
-#### CRIAÇÃO POLICIES E ROLE IAM PARA A EC2 DO JENKINS 
+#### CRIAÇÃO POLICIES E ROLE IAM PARA A EC2 DO JENKINS: 
 
 É necessário também a criação de uma role IAM para a máquina do Jenkins conseguir dá comandos da EC2 de testes. Para isso também pode-se usar um usuário de serviço que tenha **access_key_id** e **secret_access_key**, mas optei por criar uma role. Para a criação da Role, você pode criar uma role com alguma policie para ter acesso full a EC2. Para criar uma role vá no console do IAM => ROLES => CREATE ROLE. Após a criação da ROLE foi necessário attacha-la na máquina do Jenkins.
+
+
+#### FUNCIONAMENTO:
+
+Agora já com tudo configurado, vou explicar como será o funcionamento do processo.
+
+1. Primeiramente vamos supor que já existem 3 imagens docker criadas, 2 serão do nosso projeto, sendo 1 será para desligar a máquina de testes e a outra para ligar. (Os arquivos de build do docker se encontram nesse repositório) e a 3º imagem é a imagem já usada para a realização de testes (imagem fora do escorpo desse projeto).
+2. Partindo do principio que a EC2 TESTE está desligada o Jenkinsfile (EC2 JENKINS) irá criar 3 containers, o primeiro container será o de start da EC2 TESTE (que terá nossa imagem da pasta "start_valida"). Esse container será responsável por rodar um script python, que terá o seguinte conteúdo:
+
+```
+import boto3
+import os
+import random
+sns = boto3.resource('sns', region_name='us-east-2')
+topic_arn = sns.PlatformEndpoint('arn:aws:sns:us-east-2:398963803929:Start_Valida')
+
+
+
+def publish_message(topic_arn, message): 
+    response = topic_arn.publish(Message=message)
+    message_id = response['MessageId']
+    print(response, message_id)
+
+if __name__ == "__main__":
+    publish_message(topic_arn, "Starting Server Valida")
+```
+
+
+3. O segundo container será o container que vai realizar os testes (essa imagem já existe)
+4. O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida")
