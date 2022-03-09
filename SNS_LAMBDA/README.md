@@ -167,17 +167,6 @@ sns = boto3.resource('sns', region_name='us-east-2')
 topic_arn = sns.PlatformEndpoint('arn:aws:sns:us-east-2:398963803929:Stop_valida')
 
 
-def test_app():
-    while True:
-        number = random.randint(0, 10)
-        if number == 0:
-            print('Build Sucess')
-            publish_message(topic_arn, "Stopping Server Valida")
-            break
-        print('Build Failed')
-        os.system("sleep 30")
-
-
 def publish_message(topic_arn, message): 
     response = topic_arn.publish(Message=message)
     message_id = response['MessageId']
@@ -185,7 +174,7 @@ def publish_message(topic_arn, message):
 
 
 if __name__ == "__main__":
-    test_app()
+    publish_message(topic_arn, "Stopping Server Valida")
 ```
 
 Esse script irá publicar uma mensagem 'Stopping Server Valida' para o tópico Stop_valida.
