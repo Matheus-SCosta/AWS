@@ -22,6 +22,27 @@ O AWS EC2 são os servidores virtuais da Amazon.
 
 
 
+## IDÉIA DO PROJETO
+
+
+                     ___________                     ____________               
+                    |           |                   |            |
+                    |           |                   |            |   
+                    |  AWS SNS  |                   | AWS LAMBDA |
+                    |           |                   |            |
+                    |___________|                   |____________|
+
+
+ ___________
+|           |
+|           |
+| JENKINS   |
+|           |
+|___________|                 
+
+
+
+
 ## CONFIGURAÇÃO
 
 #### CRIAÇÃO TÓPICO SNS:
