@@ -87,8 +87,8 @@ Ao concluir a criação da policie attach a role usada pela função LAMBDA.
 
 Agora já com tudo configurado, vou explicar como será o funcionamento do processo.
 
-1. Primeiramente vamos supor que já existem 3 imagens docker criadas, 2 serão do nosso projeto, sendo 1 será para desligar a máquina de testes e a outra para ligar. (Os arquivos de build do docker se encontram nesse repositório) e a 3º imagem é a imagem já usada para a realização de testes (imagem fora do escorpo desse projeto).
-2. Partindo do principio que a EC2 TESTE está desligada o Jenkinsfile (EC2 JENKINS) irá criar 3 containers, o primeiro container será o de start da EC2 TESTE (que terá nossa imagem da pasta "start_valida"). Esse container será responsável por rodar um script python, que terá o seguinte conteúdo:
+* Primeiramente vamos supor que já existem 3 imagens docker criadas, 2 serão do nosso projeto, sendo 1 será para desligar a máquina de testes e a outra para ligar. (Os arquivos de build do docker se encontram nesse repositório) e a 3º imagem é a imagem já usada para a realização de testes (imagem fora do escorpo desse projeto).
+*  Partindo do principio que a EC2 TESTE está desligada o Jenkinsfile (EC2 JENKINS) irá criar 3 containers, o primeiro container será o de start da EC2 TESTE (que terá nossa imagem da pasta "start_valida"). Esse container será responsável por rodar um script python, que terá o seguinte conteúdo:
 
 ```
 import boto3
@@ -109,5 +109,5 @@ if __name__ == "__main__":
 ```
 
 
-3. O segundo container será o container que vai realizar os testes (essa imagem já existe)
-4. O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida")
+*  O segundo container será o container que vai realizar os testes (essa imagem já existe)
+*  O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida")
