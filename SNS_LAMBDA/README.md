@@ -107,7 +107,52 @@ def publish_message(topic_arn, message):
 if __name__ == "__main__":
     publish_message(topic_arn, "Starting Server Valida")
 ```
+Esse script irá publicar a mensagem "Starting Server Valida" no tópico SNS Start_Valida.
 
 
-*  O segundo container será o container que vai realizar os testes (essa imagem já existe)
+*  Essa mensagem publicada será o gatilho para a função LAMBDA, cujo irá rodar uma aplicação em python, que terá o seguinte cõdigo:
+
+```
+from __future__ import print_function
+import json
+print('Loading function')
+import boto3
+import os
+import sys
+
+def lambda_handler(event, context):
+    #print("Received event: " + json.dumps(event, indent=2))
+    print(event)
+    print(context)
+    message = event['Records'][0]['Sns']['Message']
+    if message == "Stopping Server Valida":
+        print("Stopping Server Valida")
+        stop_ec2(instances = ['i-032398d6054a962e1'])
+    elif message == 'Starting Server Valida':
+        print("Starting Server Valida")
+        start_ec2(instances = ['i-032398d6054a962e1'])
+    else:
+        print("Invalid message")
+        sys.exit()
+    return message
+    
+    
+def start_ec2(instances):
+    print(f"Instance Starting {instances}")
+    ec2 = boto3.client('ec2', region_name='us-east-2')
+    ec2.start_instances(InstanceIds=instances)
+    print('started your instances: ' + str(instances))
+
+
+def stop_ec2(instances):
+    print(f"Instance Stopping {instances}")
+    ec2 = boto3.client('ec2', region_name='us-east-2')
+    ec2.stop_instances(InstanceIds=instances)
+    print('stopped your instances: ' + str(instances))
+    
+```
+
+Essa aplicação será responsável por verificar qual a mensagem que foi publicada, Nesse caso foi publicada a mensagem 'Starting Server Valida', então dessa forma irá executar a função start_ec2, que irá ligar a EC2_TESTE i-032398d6054a962e1.
+
+*  O segundo container será o container que vai realizar os testes (essa imagem já existe). Esse container irá executar todos os testes que precisam ser feitos.
 *  O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida")
