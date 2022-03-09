@@ -56,7 +56,8 @@ Com a função lambda já criada precisamos criar uma role IAM para que o LAMBDA
             "Resource": "*"
         }
     ]
-}```
+}
+```
 
 Ao concluir a criação da policie attach a role usada pela função LAMBDA.
 
