@@ -24,11 +24,39 @@ O AWS EC2 são os servidores virtuais da Amazon.
 
 ## CONFIGURAÇÃO
 
-#### CRIAÇÃO TÓPICO SNS
+#### CRIAÇÃO TÓPICO SNS:
 Pressumindo que já temos uma conta AWS criada e com um usuário criado com permissões suficientes para conseguirmos realizar a criação de recursos. Vamos criar um tópico no AWS SNS para que seja possível publicar mensagens de notificação. Para criar um tópico basta seguir a documentação https://docs.aws.amazon.com/sns/latest/dg/sns-getting-started.html#step-create-queue ou então basta selecionar as seguinte opções: 
 Fazer login no console do Amazon SNS => No painel de navegação esquerdo, escolha Tópicos => Na página Tópicos , escolha Criar tópico => Por padrão, o console cria um tópico FIFO. Escolha Padrão => Na seção Detalhes, insira um Nome para o tópico => Role até o final do formulário e escolha Criar tópico.
 A partir de agora já conseguimos publicar mensagens nesse tópico para o a nossa função LAMBDA receba as notificações.
 
-#### CRIAÇÃO FUNÇÃO LAMBDA
+#### CRIAÇÃO FUNÇÃO LAMBDA:
 Para criar uma função LAMBDA basta seguir a documentação https://docs.aws.amazon.com/lambda/latest/dg/getting-started-create-function.html ou então seguir os passos: Abra a página Funções do console Lambda => Escolha Criar função => Em Informações básicas, faça o seguinte => Para Nome da função, insira my-function => Para Runtime, confirme se Node.js 14.x está selecionado. Observe que o Lambda fornece tempos de execução para .NET (PowerShell, C#), Go, Java, Node.js, Python e Ruby, porém para o nosso caso vamos utilizar Pyhton => Escolha Criar função.
+
+#### CRIAÇÃO POLICIES E ROLE IAM PARA A FUNÇÃO LAMBDA:
+Com a função lambda já criada precisamos criar uma role IAM para que o LAMBDA consiga ter permissão para dá comandos em recursos AWS. No nosso caso é necessário por exemplo permissão para ligar e desligar EC2, dentre outras. Geralmente ao criamos uma função LAMBDA vocẽ pode criar uma role com funções básicas para o lambda, caso essa role já exista seria necessário apenas criar uma policie e attachar na role já criada para a função LAMBDA. Então dessa forma vamos criar uma policie com permissão para ligar e desligar EC2 e para criar basta ir no console do IAM => POLICIES => CREATE POLICIES e colocar o json abaixo e criar a policie.   
+
+```{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:*:*:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:Start*",
+                "ec2:Stop*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}```
+
+Ao concluir a criação da policie attach a role usada pela função LAMBDA.
 
