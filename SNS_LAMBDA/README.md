@@ -155,4 +155,39 @@ def stop_ec2(instances):
 Essa aplicação será responsável por verificar qual a mensagem que foi publicada, Nesse caso foi publicada a mensagem 'Starting Server Valida', então dessa forma irá executar a função start_ec2, que irá ligar a EC2_TESTE i-032398d6054a962e1.
 
 *  O segundo container será o container que vai realizar os testes (essa imagem já existe). Esse container irá executar todos os testes que precisam ser feitos.
-*  O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida")
+*  O terceiro container será o container responsável por dá o stop na EC2 TESTE. (que terá nossa imagem da pasta "stop_valida"). Esse container será responsável por rodar um script python, que terá o seguinte conteúdo:
+
+
+```
+import boto3
+import os
+import random
+
+sns = boto3.resource('sns', region_name='us-east-2')
+topic_arn = sns.PlatformEndpoint('arn:aws:sns:us-east-2:398963803929:Stop_valida')
+
+
+def test_app():
+    while True:
+        number = random.randint(0, 10)
+        if number == 0:
+            print('Build Sucess')
+            publish_message(topic_arn, "Stopping Server Valida")
+            break
+        print('Build Failed')
+        os.system("sleep 30")
+
+
+def publish_message(topic_arn, message): 
+    response = topic_arn.publish(Message=message)
+    message_id = response['MessageId']
+    print(response, message_id)
+
+
+if __name__ == "__main__":
+    test_app()
+```
+
+Esse script irá publicar uma mensagem 'Stopping Server Valida' para o tópico Stop_valida.
+
+*  Essa mensagem publicada será um novo gatilho para a função LAMBDA, cujo dessa vez verificará que a mensagem é diferente 'Stopping Server Valida', e vai executar a função stop_ec2, desligando a ec2.
